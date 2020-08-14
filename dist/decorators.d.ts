@@ -1,4 +1,4 @@
-import '@abraham/reflection';
+import 'reflect-metadata';
 import { ObjectFactory, Scope } from './model';
 /**
  * A decorator to tell the container that this class should be handled by the Request [[Scope]].

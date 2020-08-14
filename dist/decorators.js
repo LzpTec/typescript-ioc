@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.InjectValue = exports.Inject = exports.Factory = exports.Scoped = exports.OnlyInstantiableByContainer = exports.Singleton = exports.InRequestScope = void 0;
-require("@abraham/reflection");
+require("reflect-metadata");
 const container_1 = require("./container/container");
 const model_1 = require("./model");
 /**

@@ -4,7 +4,7 @@
  * Visit the project page on [GitHub] (https://github.com/thiagobustamante/typescript-ioc).
  */
 
-import '@abraham/reflection';
+import 'reflect-metadata';
 import { IoCContainer } from './container/container';
 import { BuildContext, Config, ConstantConfiguration, ContainerConfiguration, NamespaceConfiguration, ObjectFactory, Scope, Snapshot, ValueConfig } from './model';
 import { LocalScope, RequestScope, SingletonScope } from './scopes';
