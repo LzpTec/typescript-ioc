@@ -50,6 +50,12 @@ To install typescript-ioc:
 npm install typescript-ioc
 ```
 
+From github:
+
+```bash
+npm install https://github.com/LzpTec/typescript-ioc.git --save
+```
+
 ## Configuration
 
 Typescript-ioc requires the following TypeScript compilation options in your tsconfig.json file:

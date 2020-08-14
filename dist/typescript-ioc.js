@@ -1,35 +1,34 @@
+"use strict";
 /**
  * This is a lightweight annotation-based dependency injection container for typescript.
  *
  * Visit the project page on [GitHub] (https://github.com/thiagobustamante/typescript-ioc).
  */
-
-import '@abraham/reflection';
-import { IoCContainer } from './container/container';
-import { BuildContext, Config, ConstantConfiguration, ContainerConfiguration, NamespaceConfiguration, ObjectFactory, Scope, Snapshot, ValueConfig } from './model';
-import { LocalScope, RequestScope, SingletonScope } from './scopes';
-
-export { Factory, Inject, InjectValue, InRequestScope, OnlyInstantiableByContainer, Scoped, Singleton } from './decorators';
-export { Config };
-export { ValueConfig };
-export { ObjectFactory };
-export { BuildContext };
-export { Scope };
-export { ContainerConfiguration };
-export { ConstantConfiguration };
-export { Snapshot };
-
-Scope.Local = new LocalScope();
-Scope.Singleton = new SingletonScope();
-Scope.Request = new RequestScope();
-
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Container = exports.Scope = exports.BuildContext = void 0;
+require("@abraham/reflection");
+const container_1 = require("./container/container");
+const model_1 = require("./model");
+Object.defineProperty(exports, "BuildContext", { enumerable: true, get: function () { return model_1.BuildContext; } });
+Object.defineProperty(exports, "Scope", { enumerable: true, get: function () { return model_1.Scope; } });
+const scopes_1 = require("./scopes");
+var decorators_1 = require("./decorators");
+Object.defineProperty(exports, "Factory", { enumerable: true, get: function () { return decorators_1.Factory; } });
+Object.defineProperty(exports, "Inject", { enumerable: true, get: function () { return decorators_1.Inject; } });
+Object.defineProperty(exports, "InjectValue", { enumerable: true, get: function () { return decorators_1.InjectValue; } });
+Object.defineProperty(exports, "InRequestScope", { enumerable: true, get: function () { return decorators_1.InRequestScope; } });
+Object.defineProperty(exports, "OnlyInstantiableByContainer", { enumerable: true, get: function () { return decorators_1.OnlyInstantiableByContainer; } });
+Object.defineProperty(exports, "Scoped", { enumerable: true, get: function () { return decorators_1.Scoped; } });
+Object.defineProperty(exports, "Singleton", { enumerable: true, get: function () { return decorators_1.Singleton; } });
+model_1.Scope.Local = new scopes_1.LocalScope();
+model_1.Scope.Singleton = new scopes_1.SingletonScope();
+model_1.Scope.Request = new scopes_1.RequestScope();
 /**
  * The IoC Container class. Can be used to register and to retrieve your dependencies.
  * You can also use de decorators [[OnlyInstantiableByContainer]], [[Scoped]], [[Singleton]], [[Factory]]
  * to configure the dependency directly on the class.
  */
-export class Container {
-
+class Container {
     /**
      * Add a dependency to the Container. If this type is already present, just return its associated
      * configuration object.
@@ -41,10 +40,9 @@ export class Container {
      * @param source The type that will be bound to the Container
      * @return a container configuration
      */
-    public static bind(source: Function): Config {
-        return IoCContainer.bind(source);
+    static bind(source) {
+        return container_1.IoCContainer.bind(source);
     }
-
     /**
      * Retrieve an object from the container. It will resolve all dependencies and apply any type replacement
      * before return the object.
@@ -52,100 +50,91 @@ export class Container {
      * @param source The dependency type to resolve
      * @return an object resolved for the given source type;
      */
-    public static get<T>(source: Function & { prototype: T }): T {
-        return IoCContainer.get(source, new ContainerBuildContext());
+    static get(source) {
+        return container_1.IoCContainer.get(source, new ContainerBuildContext());
     }
-
     /**
      * Retrieve a type associated with the type provided from the container
      * @param source The dependency type to resolve
      * @return an object resolved for the given source type;
      */
-    public static getType(source: Function) {
-        return IoCContainer.getType(source);
+    static getType(source) {
+        return container_1.IoCContainer.getType(source);
     }
-
     /**
-     * 
-     * @param name 
+     *
+     * @param name
      */
-    public static bindName(name: string): ValueConfig {
-        return IoCContainer.bindName(name);
+    static bindName(name) {
+        return container_1.IoCContainer.bindName(name);
     }
-
     /**
      * Retrieve a constant from the container.
      * @param name The name of the constant used to identify these binding
      * @return the constant value
      */
-    public static getValue(name: string) {
-        return IoCContainer.getValue(name);
+    static getValue(name) {
+        return container_1.IoCContainer.getValue(name);
     }
-
     /**
      * Select the current namespace to work.
      * @param name The namespace name, or null to select the default namespace
      */
-    public static namespace(name: string) {
-        return IoCContainer.namespace(name);
+    static namespace(name) {
+        return container_1.IoCContainer.namespace(name);
     }
-
     /**
      * An alias to namespace method.
      * @param name The namespace name, or null to select the default namespace
      */
-    public static environment(name: string) {
+    static environment(name) {
         return Container.namespace(name);
     }
-
     /**
      * Store the state for a specified binding.  Can then be restored later.   Useful for testing.
      * @param source The dependency type
      */
     // _args is here to ensure backward compatibility
-    public static snapshot(_args?: any): Snapshot {
-        return IoCContainer.snapshot();
+    static snapshot(_args) {
+        return container_1.IoCContainer.snapshot();
     }
-
     /**
      * Import an array of configurations to the Container
-     * @param configurations 
+     * @param configurations
      */
-    public static configure(...configurations: Array<ContainerConfiguration | ConstantConfiguration | NamespaceConfiguration>) {
+    static configure(...configurations) {
         configurations.forEach(config => {
-            if ((config as ContainerConfiguration).bind) {
-                Container.configureType(config as ContainerConfiguration);
-            } else if ((config as ConstantConfiguration).bindName) {
-                Container.configureConstant(config as ConstantConfiguration);
-            } else if ((config as NamespaceConfiguration).env || (config as NamespaceConfiguration).namespace) {
-                Container.configureNamespace(config as NamespaceConfiguration);
+            if (config.bind) {
+                Container.configureType(config);
+            }
+            else if (config.bindName) {
+                Container.configureConstant(config);
+            }
+            else if (config.env || config.namespace) {
+                Container.configureNamespace(config);
             }
         });
     }
-
-    private static configureNamespace(config: NamespaceConfiguration) {
-        const selectedNamespace = IoCContainer.selectedNamespace();
+    static configureNamespace(config) {
+        const selectedNamespace = container_1.IoCContainer.selectedNamespace();
         const env = config.env || config.namespace;
         Object.keys(env).forEach(namespace => {
             Container.namespace(namespace);
             const namespaceConfig = env[namespace];
             Container.configure(...namespaceConfig);
         });
-
         Container.namespace(selectedNamespace);
     }
-
-    private static configureConstant(config: ConstantConfiguration) {
-        const bind = IoCContainer.bindName(config.bindName);
+    static configureConstant(config) {
+        const bind = container_1.IoCContainer.bindName(config.bindName);
         if (bind) {
             if (config.to) {
                 bind.to(config.to);
             }
         }
     }
-
-    private static configureType(config: ContainerConfiguration) {
-        const bind = IoCContainer.bind(config.bind);
+    static configureType(config) {
+        const bind = container_1.IoCContainer.bind(config.bind);
         if (bind) {
             if (config.to) {
                 bind.to(config.to);
@@ -162,11 +151,13 @@ export class Container {
         }
     }
 }
-
-class ContainerBuildContext extends BuildContext {
-    private context = new Map<Function, any>();
-
-    public build<T>(source: Function & { prototype: T; }, factory: ObjectFactory): T {
+exports.Container = Container;
+class ContainerBuildContext extends model_1.BuildContext {
+    constructor() {
+        super(...arguments);
+        this.context = new Map();
+    }
+    build(source, factory) {
         let instance = this.context.get(source);
         if (!instance) {
             instance = factory(this);
@@ -174,8 +165,8 @@ class ContainerBuildContext extends BuildContext {
         }
         return instance;
     }
-
-    public resolve<T>(source: Function & { prototype: T }): T {
-        return IoCContainer.get(source, this);
+    resolve(source) {
+        return container_1.IoCContainer.get(source, this);
     }
 }
+//# sourceMappingURL=typescript-ioc.js.map

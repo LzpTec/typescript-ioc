@@ -1,8 +1,5 @@
 import '@abraham/reflection';
-import { IoCContainer } from './container/container';
 import { ObjectFactory, Scope } from './model';
-
-
 /**
  * A decorator to tell the container that this class should be handled by the Request [[Scope]].
  *
@@ -19,10 +16,7 @@ import { ObjectFactory, Scope } from './model';
  * Container.bind(PersonDAO).scope(Scope.Request)
  * ```
  */
-export function InRequestScope(target: Function) {
-    IoCContainer.bind(target).scope(Scope.Request);
-}
-
+export declare function InRequestScope(target: Function): void;
 /**
  * A decorator to tell the container that this class should be handled by the Singleton [[Scope]].
  *
@@ -39,10 +33,7 @@ export function InRequestScope(target: Function) {
  * Container.bind(PersonDAO).scope(Scope.Singleton)
  * ```
  */
-export function Singleton(target: Function) {
-    IoCContainer.bind(target).scope(Scope.Singleton);
-}
-
+export declare function Singleton(target: Function): void;
 /**
  * A decorator to tell the container that this class should has its instantiation always handled by the Container.
  *
@@ -57,16 +48,13 @@ export function Singleton(target: Function) {
  * }
  * ```
  *
- * You will only be able to create instances of PersonService through the Container. 
- * 
+ * You will only be able to create instances of PersonService through the Container.
+ *
  * ```
  * let PersonService = new PersonService(); // will thrown a TypeError exception
  * ```
  */
-export function OnlyInstantiableByContainer(target: Function) {
-    return IoCContainer.bind(target).instrumentConstructor().decoratedConstructor as any;
-}
-
+export declare function OnlyInstantiableByContainer(target: Function): any;
 /**
  * A decorator to tell the container that this class should be handled by the provided [[Scope]].
  * For example:
@@ -90,12 +78,7 @@ export function OnlyInstantiableByContainer(target: Function) {
  * ```
  * @param scope The scope that will handle instantiations for this class.
  */
-export function Scoped(scope: Scope) {
-    return (target: Function) => {
-        IoCContainer.bind(target).scope(scope);
-    };
-}
-
+export declare function Scoped(scope: Scope): (target: Function) => void;
 /**
  * A decorator to tell the container that this class should instantiated by the given [[ObjectFactory]].
  * For example:
@@ -113,12 +96,7 @@ export function Scoped(scope: Scope) {
  * ```
  * @param factory The factory that will handle instantiations for this class.
  */
-export function Factory(factory: ObjectFactory) {
-    return (target: Function) => {
-        IoCContainer.bind(target).factory(factory);
-    };
-}
-
+export declare function Factory(factory: ObjectFactory): (target: Function) => void;
 /**
  * A decorator to request from Container that it resolve the annotated property dependency.
  * For example:
@@ -145,16 +123,7 @@ export function Factory(factory: ObjectFactory) {
  * console.log('PersonService.personDAO: ' + personService.personDAO);
  * ```
  */
-export function Inject(...args: Array<any>) {
-    if (args.length === 2 || (args.length === 3 && typeof args[2] === 'undefined')) {
-        return InjectPropertyDecorator.apply(this, args);
-    } else if (args.length === 3 && typeof args[2] === 'number') {
-        return InjectParamDecorator.apply(this, args);
-    }
-
-    throw new TypeError('Invalid @Inject Decorator declaration.');
-}
-
+export declare function Inject(...args: Array<any>): any;
 /**
  * A decorator to request from Container that it resolve the annotated property dependency
  * with a constant value.
@@ -180,59 +149,4 @@ export function Inject(...args: Array<any>) {
  * console.log('PersonService.config.dependencyURL: ' + personService.config.dependencyURL);
  * ```
  */
-export function InjectValue(value: string) {
-    return (...args: Array<any>) => {
-        if (args.length === 2 || (args.length === 3 && typeof args[2] === 'undefined')) {
-            const params = [...args, value].filter(v => v ? true : false);
-            return InjectValuePropertyDecorator.apply(this, params);
-        } else if (args.length === 3 && typeof args[2] === 'number') {
-            return InjectValueParamDecorator.apply(this, [...args, value]);
-        }
-
-        throw new TypeError('Invalid @InjectValue Decorator declaration.');
-    };
-}
-
-
-
-/**
- * Decorator processor for [[Inject]] decorator on properties
- */
-function InjectPropertyDecorator(target: Function, key: string) {
-    let t: any = Reflect.getMetadata('design:type', target, key);
-    if (!t) {
-        // Needed to support react native inheritance
-        t = Reflect.getMetadata('design:type', target.constructor, key);
-    }
-    IoCContainer.injectProperty(target.constructor, key, t);
-}
-
-/**
- * Decorator processor for [[Inject]] decorator on constructor parameters
- */
-function InjectParamDecorator(target: Function, propertyKey: string | symbol, parameterIndex: number) {
-    if (!propertyKey) { // only intercept constructor parameters
-        const config = IoCContainer.bind(target);
-        config.paramTypes = config.paramTypes || [];
-        const paramTypes: Array<any> = Reflect.getMetadata('design:paramtypes', target);
-        config.paramTypes.unshift(paramTypes[parameterIndex]);
-    }
-}
-
-/**
- * Decorator processor for [[Inject]] decorator on properties
- */
-function InjectValuePropertyDecorator(target: Function, key: string, value: string) {
-    IoCContainer.injectValueProperty(target.constructor, key, value);
-}
-
-/**
- * Decorator processor for [[Inject]] decorator on constructor parameters
- */
-function InjectValueParamDecorator(target: Function, propertyKey: string | symbol, _parameterIndex: number, value: string) {
-    if (!propertyKey) { // only intercept constructor parameters
-        const config = IoCContainer.bind(target);
-        config.paramTypes = config.paramTypes || [];
-        config.paramTypes.unshift(value);
-    }
-}
+export declare function InjectValue(value: string): (...args: Array<any>) => any;
