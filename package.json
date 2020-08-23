@@ -1,13 +1,13 @@
 {
   "name": "typescript-ioc",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "description": "A Lightweight annotation-based dependency injection container for typescript.",
   "author": "Thiago da Rosa de Bustamante <trbustamante@gmail.com>",
   "scripts": {
     "start": "tsc -w",
     "build": "npm run clean && tsc",
     "clean": "rimraf dist",
-    "prepare": "rimraf dist && tsc",
+    "prepublish": "rimraf dist && tsc",
     "lint": "tslint ./src/**/*.ts ./test/**/*.ts",
     "lint:fix": "tslint --fix ./src/**/*.ts ./test/**/*.ts -t verbose",
     "pretest": "npm run build && npm run lint",
