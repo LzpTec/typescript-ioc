@@ -1,4 +1,4 @@
-import { Scope, ObjectFactory, Config, BuildContext, ValueConfig } from '../model';
+import { BuildContext, Config, ObjectFactory, Scope, ValueConfig } from '../model';
 import { InstanceFactory, ValueFactory } from './container-types';
 export declare class IoCBindConfig implements Config {
     source: Function;

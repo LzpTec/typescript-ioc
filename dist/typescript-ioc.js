@@ -6,7 +6,7 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Container = exports.Scope = exports.BuildContext = void 0;
-require("reflect-metadata");
+require("@abraham/reflection");
 const container_1 = require("./container/container");
 const model_1 = require("./model");
 Object.defineProperty(exports, "BuildContext", { enumerable: true, get: function () { return model_1.BuildContext; } });

@@ -3,7 +3,7 @@
  *
  * Visit the project page on [GitHub] (https://github.com/thiagobustamante/typescript-ioc).
  */
-import 'reflect-metadata';
+import '@abraham/reflection';
 import { BuildContext, Config, ConstantConfiguration, ContainerConfiguration, NamespaceConfiguration, ObjectFactory, Scope, Snapshot, ValueConfig } from './model';
 export { Factory, Inject, InjectValue, InRequestScope, OnlyInstantiableByContainer, Scoped, Singleton } from './decorators';
 export { Config };

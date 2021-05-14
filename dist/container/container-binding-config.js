@@ -1,10 +1,13 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PropertyPath = exports.IoCBindValueConfig = exports.IoCBindConfig = void 0;
-const injection_handler_1 = require("./injection-handler");
+const dlv_1 = __importDefault(require("dlv"));
+const dset_1 = require("dset");
 const model_1 = require("../model");
-const get = require("lodash.get");
-const set = require("lodash.set");
+const injection_handler_1 = require("./injection-handler");
 class IoCBindConfig {
     constructor(source, instanceFactory, valueFactory) {
         this.source = source;
@@ -100,7 +103,7 @@ class IoCBindValueConfig {
     to(value) {
         if (this.path) {
             this.value = this.value || {};
-            set(this.value, this.path, value);
+            dset_1.dset(this.value, this.path, value);
         }
         else {
             this.value = value;
@@ -109,7 +112,7 @@ class IoCBindValueConfig {
     }
     getValue() {
         if (this.path) {
-            return get(this.value, this.path);
+            return dlv_1.default(this.value, this.path);
         }
         return this.value;
     }

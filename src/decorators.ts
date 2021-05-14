@@ -1,4 +1,4 @@
-import 'reflect-metadata';
+import '@abraham/reflection';
 import { IoCContainer } from './container/container';
 import { ObjectFactory, Scope } from './model';
 

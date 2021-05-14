@@ -1,8 +1,8 @@
-import { InjectorHandler } from './injection-handler';
-import { Scope, ObjectFactory, Config, BuildContext, ValueConfig } from '../model';
+import delve from 'dlv';
+import { dset } from 'dset';
+import { BuildContext, Config, ObjectFactory, Scope, ValueConfig } from '../model';
 import { InstanceFactory, ValueFactory } from './container-types';
-import get = require('lodash.get');
-import set = require('lodash.set');
+import { InjectorHandler } from './injection-handler';
 
 export class IoCBindConfig implements Config {
     public source: Function;
@@ -123,7 +123,7 @@ export class IoCBindValueConfig implements ValueConfig {
     public to(value: any): ValueConfig {
         if (this.path) {
             this.value = this.value || {};
-            set(this.value, this.path, value);
+            dset(this.value, this.path, value);
         } else {
             this.value = value;
         }
@@ -132,7 +132,7 @@ export class IoCBindValueConfig implements ValueConfig {
 
     public getValue() {
         if (this.path) {
-            return get(this.value, this.path);
+            return delve(this.value, this.path);
         }
         return this.value;
     }

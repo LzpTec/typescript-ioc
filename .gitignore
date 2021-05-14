@@ -1,5 +1,5 @@
 .DS_Store
-# dist
+dist
 !test/*.js
 doc
 node_modules
